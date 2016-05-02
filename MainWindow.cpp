@@ -28,7 +28,7 @@ enum
 
 MainWindow::MainWindow(void)
 	:	BWindow(BRect(100,100,324,200), "StopWatch", B_TITLED_WINDOW,
-				//B_NOT_ZOOMABLE | B_NOT_RESIZABLE,
+				B_NOT_ZOOMABLE | B_NOT_RESIZABLE |
 				B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
 	BView *mainView = new BView(Bounds(), "mainView", B_FOLLOW_ALL, B_WILL_DRAW);
