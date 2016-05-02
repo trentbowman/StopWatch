@@ -1,7 +1,8 @@
 NAME= StopWatch
 TYPE= APP
 SRCS= App.cpp MainWindow.cpp
-RSRCS=Resources.rsrc
+RSRCS= Resources.rsrc
+RDEFS= Resources.rdef
 LIBS= /boot/system/lib/libroot.so /boot/system/lib/libbe.so
 LIBPATHS=
 SYSTEM_INCLUDE_PATHS= /boot/develop/headers/be /boot/develop/headers/cpp /boot/develop/headers/posix /boot/home/config/include
@@ -24,4 +25,6 @@ COMPILER_FLAGS=
 LINKER_FLAGS=
 
 ## include the makefile-engine
-include $(BUILDHOME)/etc/makefile-engine
+DEVEL_DIRECTORY := \
+	$(shell findpaths -r "makefile_engine" B_FIND_PATH_DEVELOP_DIRECTORY)
+include $(DEVEL_DIRECTORY)/etc/makefile-engine
