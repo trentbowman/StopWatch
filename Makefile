@@ -1,7 +1,7 @@
 NAME= StopWatch
 TYPE= APP
 SRCS= App.cpp MainWindow.cpp
-RSRCS=
+RSRCS=Resources.rsrc
 LIBS= /boot/system/lib/libroot.so /boot/system/lib/libbe.so
 LIBPATHS=
 SYSTEM_INCLUDE_PATHS= /boot/develop/headers/be /boot/develop/headers/cpp /boot/develop/headers/posix /boot/home/config/include
