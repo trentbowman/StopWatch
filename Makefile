@@ -24,4 +24,4 @@ COMPILER_FLAGS=
 LINKER_FLAGS=
 
 ## include the makefile-engine
-include $(BUILDHOME)/etc/makefile-engine
+include $(BUILDHOME)/boot/system/develop/etc/makefile-engine
