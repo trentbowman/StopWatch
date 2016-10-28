@@ -7,6 +7,7 @@ class MainWindow : public BWindow
 {
 public:
 	MainWindow(void);
+	void AllAttached();
 	void MessageReceived(BMessage *msg);
 	bool QuitRequested(void);
 

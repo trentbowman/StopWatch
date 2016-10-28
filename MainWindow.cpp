@@ -25,7 +25,6 @@ enum
 	M_UPDATE_CLOCK = 'uclk'
 };
 
-
 MainWindow::MainWindow(void)
 	:	BWindow(BRect(100,100,324,200), "StopWatch", B_TITLED_WINDOW,
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE |
@@ -43,25 +42,25 @@ MainWindow::MainWindow(void)
 								   	  
 	BButton *resetButton = new BButton(BRect(177,65,255,90), "resetButton", "Reset",
 								   	   new BMessage(M_BUTTON_RESET));
-								   	   
-	BFont font(be_plain_font);
-    font.SetSize(40.0);
-    font.SetFamilyAndStyle("DejaVu Sans Mono", "Book");
-    clockStringView->SetFont(&font);
 	
 	mainView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-	clockStringView->SetAlignment(B_ALIGN_CENTER);
-	clockStringView->SetViewColor(0,0,0);
-	clockStringView->SetHighColor(255,255,255);
-	clockStringView->SetText(allZeros.String());
 	
 	AddChild(mainView);
 	mainView->AddChild(clockStringView);
 	mainView->AddChild(startButton);
 	mainView->AddChild(stopButton);
 	mainView->AddChild(resetButton);
+	
+	BFont font(be_plain_font);
+    font.SetSize(40.0);
+    font.SetFamilyAndStyle("DejaVu Sans Mono", "Book");
+	
+	clockStringView->SetFont(&font);
+	clockStringView->SetAlignment(B_ALIGN_CENTER);
+	clockStringView->SetViewColor(0,0,0);
+	clockStringView->SetHighColor(255,255,255);
+	clockStringView->SetText(allZeros.String());
 }
-
 
 void
 MainWindow::MessageReceived(BMessage *msg)
