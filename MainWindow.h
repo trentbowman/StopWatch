@@ -14,6 +14,7 @@ public:
 private:
 	int TickTock(void);
 	int UpdateClock(void);
+	int DefaultButtonState(void);
 };
 
 #endif

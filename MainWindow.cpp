@@ -16,6 +16,9 @@ int totalHours = 0;
 BString displayClock;
 BString allZeros = "00:00:00.0";
 BStringView *clockStringView;
+BButton *startButton;
+BButton *stopButton;
+BButton *resetButton;
 
 enum
 {
@@ -34,14 +37,14 @@ MainWindow::MainWindow(void)
 	
 	clockStringView = new BStringView(BRect(10,10,254,55), "clockStringView", NULL);
 	
-	BButton *startButton = new BButton(BRect(9,65,87,90), "startButton", "Start",
-								   	   new BMessage(M_BUTTON_START));
+	startButton = new BButton(BRect(9,65,87,90), "startButton", "Start",
+							  new BMessage(M_BUTTON_START));
 								  
-	BButton *stopButton = new BButton(BRect(93,65,171,90), "stopButton", "Stop",
-								   	  new BMessage(M_BUTTON_STOP));
+	stopButton = new BButton(BRect(93,65,171,90), "stopButton", "Stop",
+							 new BMessage(M_BUTTON_STOP));
 								   	  
-	BButton *resetButton = new BButton(BRect(177,65,255,90), "resetButton", "Reset",
-								   	   new BMessage(M_BUTTON_RESET));
+	resetButton = new BButton(BRect(177,65,255,90), "resetButton", "Reset",
+							  new BMessage(M_BUTTON_RESET));
 	
 	mainView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	
@@ -60,6 +63,9 @@ MainWindow::MainWindow(void)
 	clockStringView->SetViewColor(0,0,0);
 	clockStringView->SetHighColor(255,255,255);
 	clockStringView->SetText(allZeros.String());
+	
+	startButton->MakeFocus(true);
+	stopButton->SetEnabled(false);
 }
 
 void
@@ -71,6 +77,9 @@ MainWindow::MessageReceived(BMessage *msg)
 		{
 			clockStart = true;
 			clockReset = false;
+			startButton->SetEnabled(false);
+			stopButton->SetEnabled(true);
+			stopButton->MakeFocus(true);
 			TickTock();
 			break;	
 		}
@@ -78,6 +87,7 @@ MainWindow::MessageReceived(BMessage *msg)
 		{
 			clockStart = false;
 			clockReset = false;
+			DefaultButtonState();
 			break;
 		}
 		case M_BUTTON_RESET:
@@ -85,6 +95,7 @@ MainWindow::MessageReceived(BMessage *msg)
 			clockStart = false;
 			clockReset = true;
 			UpdateClock();
+			DefaultButtonState();
 			totalCycles = 0;
 			totalSeconds = 0;
 			totalMinutes = 0;
@@ -112,6 +123,16 @@ MainWindow::QuitRequested(void)
 {
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
+}
+
+
+int
+MainWindow::DefaultButtonState(void)
+{
+	startButton->SetEnabled(true);
+	startButton->MakeFocus(true);
+	stopButton->SetEnabled(false);
+	return(0);	
 }
 
 
