@@ -9,10 +9,6 @@
 
 bool clockStart = false;
 bool clockReset = false;
-int totalCycles = 0;
-int totalSeconds = 0;
-int totalMinutes = 0;
-int totalHours = 0;
 BString displayClock;
 BString allZeros = "00:00:00.0";
 BStringView *clockStringView;
@@ -66,6 +62,10 @@ MainWindow::MainWindow(void)
 	
 	startButton->MakeFocus(true);
 	stopButton->SetEnabled(false);
+	
+	this->stopwatch = new BStopWatch("stopwatch", true);
+	this->stopwatch->Reset();
+	this->stopwatch->Suspend();
 }
 
 void
@@ -75,38 +75,22 @@ MainWindow::MessageReceived(BMessage *msg)
 	{
 		case M_BUTTON_START:
 		{
-			clockStart = true;
-			clockReset = false;
-			startButton->SetEnabled(false);
-			stopButton->SetEnabled(true);
-			stopButton->MakeFocus(true);
-			TickTock();
+			this->ResumeTimer();
 			break;	
 		}
 		case M_BUTTON_STOP:
 		{
-			clockStart = false;
-			clockReset = false;
-			DefaultButtonState();
+			this->PauseTimer();
 			break;
 		}
 		case M_BUTTON_RESET:
 		{
-			clockStart = false;
-			clockReset = true;
-			UpdateClock();
-			DefaultButtonState();
-			totalCycles = 0;
-			totalSeconds = 0;
-			totalMinutes = 0;
-			totalHours = 0;
+			this->ResetTimer();
 			break;
 		}
 		case M_UPDATE_CLOCK:
 		{
-			clockStringView->SetText(displayClock.String());
-			if(clockReset) { clockStringView->SetText(allZeros.String()); }
-			else { TickTock(); }
+			this->UpdateClock();
 			break;
 		}
 		default:
@@ -135,42 +119,78 @@ MainWindow::DefaultButtonState(void)
 	return(0);	
 }
 
+//int
+//MainWindow::UpdateClock(void)
+//{
+//	PostMessage(M_UPDATE_CLOCK);
+//	usleep(9750);
+//	return(0);	
+//}
 
+void
+MainWindow::ResumeTimer(void) {
+	this->message_runner = new BMessageRunner(this, M_UPDATE_CLOCK, 100000, -1);
+	this->stopwatch->Resume();
+	clockStart = true;
+	clockReset = false;
+	startButton->SetEnabled(false);
+	stopButton->SetEnabled(true);
+	stopButton->MakeFocus(true);
+}
+
+void
+MainWindow::PauseTimer(void) {
+	if (this->message_runner) {
+				delete this->message_runner;
+				this->message_runner = NULL;
+	}
+	this->stopwatch->Suspend();
+	clockStart = false;
+	clockReset = false;
+	DefaultButtonState();
+}
+
+void
+MainWindow::ResetTimer() {
+	if (this->message_runner) {
+		delete this->message_runner;
+		this->message_runner = NULL;
+	}
+	this->stopwatch->Reset();
+	clockStart = false;
+	clockReset = true;
+	UpdateClock();
+	DefaultButtonState();
+}
 int
 MainWindow::UpdateClock(void)
 {
-	PostMessage(M_UPDATE_CLOCK);
-	usleep(9750);
-	return(0);	
-}
+	int totalSeconds = 0;
+	int totalMinutes = 0;
+	int totalHours = 0;
+	
+	bigtime_t elapsedMicroseconds = this->stopwatch->ElapsedTime();
+	
+	totalSeconds = elapsedMicroseconds / 1000000;
+	totalMinutes = totalSeconds / 60;
+	totalHours = totalMinutes / 60;
+	totalHours %= 24;
 
-
-int
-MainWindow::TickTock(void)
-{
-	while(clockStart) {
-		int H1, H2, M1, M2, S1, S2, TS;
-		H1 = ((totalHours % 60) / 10);
-		H2 = ((totalHours % 60) % 10);
-		M1 = ((totalMinutes % 60) / 10);
-		M2 = ((totalMinutes % 60) % 10);
-		S1 = ((totalSeconds % 60) / 10);
-		S2 = ((totalSeconds % 60) % 10);
-		TS = ((totalCycles / 10) % 10);
-		displayClock = "";
-		displayClock << H1 << H2 << ":" << M1 << M2 << ":" << S1 << S2 << "." << TS;
-		totalCycles += 1;
-		totalSeconds = totalCycles / 100;
-		totalMinutes = totalSeconds / 60;
-		totalHours = totalMinutes / 60;
-		if(totalHours == 24) {
-			totalCycles = 0;
-			totalSeconds = 0;
-			totalMinutes = 0;
-			totalHours = 0;
-		}
-		UpdateClock();
-		break;
+	int H1, H2, M1, M2, S1, S2, TS;
+	H1 = ((totalHours % 60) / 10);
+	H2 = ((totalHours % 60) % 10);
+	M1 = ((totalMinutes % 60) / 10);
+	M2 = ((totalMinutes % 60) % 10);
+	S1 = ((totalSeconds % 60) / 10);
+	S2 = ((totalSeconds % 60) % 10);
+	TS = ((elapsedMicroseconds % 1000000) / 100000);
+	displayClock = "";
+	displayClock << H1 << H2 << ":" << M1 << M2 << ":" << S1 << S2 << "." << TS;
+	
+	clockStringView->SetText(displayClock.String());
+	if(clockReset) { 
+		clockStringView->SetText(allZeros.String());
 	}
+
 	return(0);
 }
