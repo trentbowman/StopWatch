@@ -53,6 +53,7 @@ MainWindow::MainWindow(void)
 	BFont font(be_plain_font);
     font.SetSize(40.0);
     font.SetFamilyAndStyle("DejaVu Sans Mono", "Book");
+    // font.SetFamilyAndStyle("DSEG7 Classic", "Regular");
 	
 	clockStringView->SetFont(&font);
 	clockStringView->SetAlignment(B_ALIGN_CENTER);
@@ -63,9 +64,9 @@ MainWindow::MainWindow(void)
 	startButton->MakeFocus(true);
 	stopButton->SetEnabled(false);
 	
-	this->stopwatch = new BStopWatch("stopwatch", true);
-	this->stopwatch->Reset();
-	this->stopwatch->Suspend();
+	stopwatch = new BStopWatch("stopwatch", true);
+	stopwatch->Reset();
+	stopwatch->Suspend();
 }
 
 void
@@ -75,22 +76,22 @@ MainWindow::MessageReceived(BMessage *msg)
 	{
 		case M_BUTTON_START:
 		{
-			this->ResumeTimer();
+			Start();
 			break;	
 		}
 		case M_BUTTON_STOP:
 		{
-			this->PauseTimer();
+			Stop();
 			break;
 		}
 		case M_BUTTON_RESET:
 		{
-			this->ResetTimer();
+			Reset();
 			break;
 		}
 		case M_UPDATE_CLOCK:
 		{
-			this->UpdateClock();
+			UpdateClock();
 			break;
 		}
 		default:
@@ -119,18 +120,10 @@ MainWindow::DefaultButtonState(void)
 	return(0);	
 }
 
-//int
-//MainWindow::UpdateClock(void)
-//{
-//	PostMessage(M_UPDATE_CLOCK);
-//	usleep(9750);
-//	return(0);	
-//}
-
 void
-MainWindow::ResumeTimer(void) {
-	this->message_runner = new BMessageRunner(this, M_UPDATE_CLOCK, 100000, -1);
-	this->stopwatch->Resume();
+MainWindow::Start(void) {
+	message_runner = new BMessageRunner(this, M_UPDATE_CLOCK, 100000, -1);
+	stopwatch->Resume();
 	clockStart = true;
 	clockReset = false;
 	startButton->SetEnabled(false);
@@ -139,24 +132,25 @@ MainWindow::ResumeTimer(void) {
 }
 
 void
-MainWindow::PauseTimer(void) {
-	if (this->message_runner) {
-				delete this->message_runner;
-				this->message_runner = NULL;
+MainWindow::Stop(void) {
+	if (message_runner) {
+		delete message_runner;
+		message_runner = NULL;
 	}
-	this->stopwatch->Suspend();
+	stopwatch->Suspend();
 	clockStart = false;
 	clockReset = false;
 	DefaultButtonState();
 }
 
 void
-MainWindow::ResetTimer() {
-	if (this->message_runner) {
-		delete this->message_runner;
-		this->message_runner = NULL;
+MainWindow::Reset() {
+	if (message_runner) {
+		delete message_runner;
+		message_runner = NULL;
 	}
-	this->stopwatch->Reset();
+	stopwatch->Reset();
+	stopwatch->Suspend();
 	clockStart = false;
 	clockReset = true;
 	UpdateClock();
@@ -169,7 +163,7 @@ MainWindow::UpdateClock(void)
 	int totalMinutes = 0;
 	int totalHours = 0;
 	
-	bigtime_t elapsedMicroseconds = this->stopwatch->ElapsedTime();
+	bigtime_t elapsedMicroseconds = stopwatch->ElapsedTime();
 	
 	totalSeconds = elapsedMicroseconds / 1000000;
 	totalMinutes = totalSeconds / 60;
@@ -188,9 +182,9 @@ MainWindow::UpdateClock(void)
 	displayClock << H1 << H2 << ":" << M1 << M2 << ":" << S1 << S2 << "." << TS;
 	
 	clockStringView->SetText(displayClock.String());
-	if(clockReset) { 
+	if (clockReset) { 
 		clockStringView->SetText(allZeros.String());
 	}
-
+	
 	return(0);
 }

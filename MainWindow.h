@@ -20,9 +20,9 @@ private:
 	int TickTock(void);
 	int UpdateClock(void);
 	int DefaultButtonState(void);
-	void ResumeTimer();
-	void PauseTimer();
-	void ResetTimer();
+	void Start();
+	void Stop();
+	void Reset();
 };
 
 #endif
