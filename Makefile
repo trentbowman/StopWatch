@@ -1,9 +1,9 @@
-NAME= StopWatch
+NAME= Stopwatch
 TYPE= APP
 SRCS= App.cpp MainWindow.cpp
 RSRCS= Resources.rsrc
 RDEFS= Resources.rdef
-LIBS= /boot/system/lib/libroot.so /boot/system/lib/libbe.so
+LIBS= /boot/system/lib/libroot.so /boot/system/lib/libbe.so localestub
 LIBPATHS=
 SYSTEM_INCLUDE_PATHS= /boot/develop/headers/be /boot/develop/headers/cpp /boot/develop/headers/posix /boot/home/config/include
 LOCAL_INCLUDE_PATHS=
@@ -23,6 +23,8 @@ WARNINGS =
 SYMBOLS=
 COMPILER_FLAGS=
 LINKER_FLAGS=
+APP_MIME_SIG=application/x-vnd.Stopwatch
+LOCALES = en fr
 
 ## include the makefile-engine
 DEVEL_DIRECTORY := \

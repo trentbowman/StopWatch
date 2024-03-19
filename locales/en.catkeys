@@ -1,0 +1,5 @@
+1	English	application/x-vnd.Stopwatch	3880491681
+Stop	MainWindow		Stop
+Start	MainWindow		Start
+Stopwatch	System name		Stopwatch
+Reset	MainWindow		Reset

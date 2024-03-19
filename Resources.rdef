@@ -13,7 +13,7 @@ resource app_version {
 
 	internal = 0,
 
-	short_info = "StopWatch",
+	short_info = "Stopwatch",
 	long_info  = "A simple stopwatch application."
 };
 

@@ -6,6 +6,10 @@
 #include <String.h>
 #include <be/kernel/OS.h>
 #include <unistd.h>
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "MainWindow"
 
 bool clockStart = false;
 bool clockReset = false;
@@ -25,7 +29,7 @@ enum
 };
 
 MainWindow::MainWindow(void)
-	:	BWindow(BRect(100,100,324,200), "StopWatch", B_TITLED_WINDOW,
+	:	BWindow(BRect(100,100,324,200), B_TRANSLATE_SYSTEM_NAME("Stopwatch"), B_TITLED_WINDOW,
 				B_NOT_ZOOMABLE | B_NOT_RESIZABLE |
 				B_ASYNCHRONOUS_CONTROLS | B_QUIT_ON_WINDOW_CLOSE)
 {
@@ -33,13 +37,13 @@ MainWindow::MainWindow(void)
 	
 	clockStringView = new BStringView(BRect(10,10,254,55), "clockStringView", NULL);
 	
-	startButton = new BButton(BRect(9,65,87,90), "startButton", "Start",
-							  new BMessage(M_BUTTON_START));
+	startButton = new BButton(BRect(9,65,87,90), "startButton", B_TRANSLATE("Start"),
+							new BMessage(M_BUTTON_START));
 								  
-	stopButton = new BButton(BRect(93,65,171,90), "stopButton", "Stop",
+	stopButton = new BButton(BRect(93,65,171,90), "stopButton", B_TRANSLATE("Stop"),
 							 new BMessage(M_BUTTON_STOP));
 								   	  
-	resetButton = new BButton(BRect(177,65,255,90), "resetButton", "Reset",
+	resetButton = new BButton(BRect(177,65,255,90), "resetButton", B_TRANSLATE("Reset"),
 							  new BMessage(M_BUTTON_RESET));
 	
 	mainView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
