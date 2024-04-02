@@ -15,6 +15,7 @@ SYSTEMINCLUDE=/boot/develop/headers/posix
 SYSTEMINCLUDE=/boot/home/config/include
 LIBRARY=B_FIND_PATH_LIB_DIRECTORY/libbe.so
 LIBRARY=B_FIND_PATH_LIB_DIRECTORY/libroot.so
+LIBRARY=localestub
 RUNARGS=
 CCDEBUG=yes
 CCPROFILE=no

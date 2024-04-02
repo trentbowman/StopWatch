@@ -1,4 +1,4 @@
-resource app_signature "application/x-vnd.StopWatch";
+resource app_signature "application/x-vnd.Stopwatch";
 
 resource app_flags B_SINGLE_LAUNCH;
 
